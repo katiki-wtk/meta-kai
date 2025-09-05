@@ -1,0 +1,16 @@
+[Unit]
+Description=DHCP on wlan0 via udhcpc (busybox)
+After=network.target wpa_supplicant@wlan0.service
+Requires=wpa_supplicant@wlan0.service
+
+[Service]
+Type=simple
+# Remarque: sur Yocto, udhcpc est en général /usr/sbin/udhcpc
+# -b: background, -a: ajoute les routes, -s: script d'actions
+ExecStart=/usr/sbin/udhcpc -i wlan0 -p /run/udhcpc.wlan0.pid -b -a -s /usr/share/udhcpc/default.script
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+

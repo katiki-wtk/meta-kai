@@ -1,0 +1,27 @@
+SUMMARY = "Backend C++ FFI (libpersons.so) for flutter app"
+LICENSE = "CLOSED"
+
+
+
+# Même dépôt/branche/commit que l’app, on re-fetch une seconde fois (simple et robuste)
+SRCREV = "b2a02a4e769c744122f4b4fa5c9cfea361d104ea"
+SRC_URI = "https://bitbucket.org/adeneo-embedded/flutter_ffi_grpc/get/${SRCREV}.tar.gz.downloadfilename=flutter_ffi_grpc-${SRCREV}.tar.gz;subdir=src"
+
+PV = "1.0+git${SRCPV}"
+
+# Répertoire des sources natives
+S = "${WORKDIR}/git/native"
+
+do_compile() {
+    ${CXX} ${CXXFLAGS} -fPIC -shared \
+        persons.cpp persons_c_ffi.cpp \
+        -o libpersons.so ${LDFLAGS}
+}
+
+do_install() {
+    install -d ${D}${libdir}
+    install -m 0755 libpersons.so ${D}${libdir}/libpersons.so
+}
+
+FILES:${PN} = "${libdir}/libpersons.so"
+
